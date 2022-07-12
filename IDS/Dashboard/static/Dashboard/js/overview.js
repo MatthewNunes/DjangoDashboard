@@ -1,5 +1,5 @@
-async function loadSwatData() {
-  const dataset = await d3.csv("../resources/SWaT/data2017_time_SWaT.csv");
+function loadSwatData(dataset) {
+  //const dataset = await d3.csv("../resources/SWaT/data2017_time_SWaT.csv");
   dataset.forEach(function(row, index) {
     row["StartTime"] = new Date(row["StartTime"].split("-")[2].split(" ")[0], row["StartTime"].split("-")[1], row["StartTime"].split("-")[0], row["StartTime"].split(" ")[1].split(":")[0], row["StartTime"].split(" ")[1].split(":")[1], row["StartTime"].split(" ")[1].split(":")[2].split(".")[0]);
     row["LastTime"] = new Date(row["LastTime"].split("-")[2].split(" ")[0], row["LastTime"].split("-")[1], row["LastTime"].split("-")[0], row["LastTime"].split(" ")[1].split(":")[0], row["LastTime"].split(" ")[1].split(":")[1], row["LastTime"].split(" ")[1].split(":")[2].split(".")[0]);
@@ -417,6 +417,3 @@ function drawTable(dataset, ipaddress_map) {
         .style("transform", column => column.transform && column.transform(d))
   })
 }
-
-
-loadSwatData();

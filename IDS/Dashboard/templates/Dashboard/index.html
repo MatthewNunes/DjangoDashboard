@@ -4,7 +4,9 @@
     <title>Main Page</title>
     <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/main_styles.css' %}">
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="{% static 'Dashboard/js/overview.js' %}"></script>
+    <script src="{% static 'Dashboard/js/overview.js' %}">
+      loadSwatData({{ dataset }});
+    </script>
 
   </head>
   <body>
@@ -27,7 +29,7 @@
       </div>
       <div class="main_area"></div>
       <div class="network_traffic"></div>
-      <div class="registers">Registers</div>
+      <div class="registers"></div>
     </div>
   </body>
 
