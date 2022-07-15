@@ -1,4 +1,4 @@
-async function loadSwatData(dataset) {
+async function loadSwatData(dataset, dst_nums, src_nums, ip_address_map) {
   // for (const key of Object.keys(dataset["StartTime"])) {
   //   let oldDate = dataset["StartTime"][key];
   //   dataset["StartTime"][key] = new Date(oldDate.split("-")[2].split(" ")[0], oldDate.split("-")[1], oldDate.split("-")[0], oldDate.split(" ")[1].split(":")[0], oldDate.split(" ")[1].split(":")[1], oldDate.split(" ")[1].split(":")[2].split(".")[0]);
@@ -72,13 +72,12 @@ async function loadSwatData(dataset) {
     // row["URP"] = parseInt(row["URP"]);
     // row["Classification"] = parseInt(row["Classification"]);
    });
-   console.log(dataset);
   //const ip_address_map = await d3.json("../resources/SWaT/unique_vals_ips_reversed_SWAT.json");
   //const src_num = await d3.json("../resources/SWaT/2017_SWAT_src_ips.json");
   //const dst_num = await d3.json("../resources/SWaT/2017_SWAT_dst_ips.json");
-  //const src_addresses = src_num.map(d => ip_address_map[d]);
-  //const dst_addresses = dst_num.map(d => ip_address_map[d]);
-  //drawScatter(dataset, ip_address_map, src_addresses, dst_addresses);
+  const src_addresses = src_nums.map(d => ip_address_map[d]);
+  const dst_addresses = dst_nums.map(d => ip_address_map[d]);
+  drawScatter(dataset, ip_address_map, src_addresses, dst_addresses);
 }
 
 

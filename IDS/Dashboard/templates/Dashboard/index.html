@@ -33,9 +33,11 @@
   <script type="text/javascript">
     console.log("I get called");
     var data = JSON.parse("{{dataset|escapejs}}");
-    var dst_ips = JSON.parse("{{destination_ips|escapejs}}")
-    console.log(dst_ips)
-    loadSwatData(data);
+    var dst_ips = JSON.parse("{{destination_ips|escapejs}}");
+    var src_ips = JSON.parse("{{source_ips|escapejs}}");
+    var unique_ips = JSON.parse("{{unique_ips|escapejs}}");
+
+    loadSwatData(data, dst_ips, src_ips, unique_ips);
   </script>
   <script type="text/javascript">
     var acc = document.getElementsByClassName("accordion");
