@@ -1,13 +1,10 @@
-{% load static %}
+
 <html>
   <head>
+    {% load static %}
     <title>Main Page</title>
     <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/main_styles.css' %}">
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <script src="{% static 'Dashboard/js/overview.js' %}">
-      loadSwatData({{ dataset }});
-    </script>
-
   </head>
   <body>
     <div class="grid_container">
@@ -32,8 +29,15 @@
       <div class="registers"></div>
     </div>
   </body>
-
-  <script>
+  <script type="text/javascript" src="{% static 'Dashboard/js/overview.js' %}"></script>
+  <script type="text/javascript">
+    console.log("I get called");
+    var data = JSON.parse("{{dataset|escapejs}}");
+    var dst_ips = JSON.parse("{{destination_ips|escapejs}}")
+    console.log(dst_ips)
+    loadSwatData(data);
+  </script>
+  <script type="text/javascript">
     var acc = document.getElementsByClassName("accordion");
     var i;
 
@@ -60,4 +64,5 @@
        });
      }
   </script>
+
 </html>
