@@ -4,6 +4,7 @@
     {% load static %}
     <title>Main Page</title>
     <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/main_styles.css' %}">
+    <link rel="icon" type="image/x-icon" href="{% static 'Dashboard/img/favicon_io/favicon.ico' %}">
     <script src="https://d3js.org/d3.v7.min.js"></script>
   </head>
   <body>
@@ -17,16 +18,16 @@
         </ul> -->
         <div class="overview-group">
           <button class="accordion">Overview</button>
-          <button class="secondary" style="border-bottom: 1px solid black">Network</button>
-          <button class="secondary">Table</button>
+          <button class="secondary" style="border-bottom: 1px solid black"><a href="/dashboard">Network</a></button>
+          <button class="secondary"><a href="/dashboard/table">Table</a></button>
         </div>
         <button class="accordion">Devices</button>
         <button class="accordion">Alerts</button>
         <button class="accordion">Vulnerabilities</button>
       </div>
       <div class="main_area"></div>
-      <div class="network_traffic"></div>
-      <div class="registers"></div>
+      <!-- <div class="network_traffic"></div>
+      <div class="registers"></div> -->
     </div>
   </body>
   <script type="text/javascript" src="{% static 'Dashboard/js/overview.js' %}"></script>

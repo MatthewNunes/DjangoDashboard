@@ -8,6 +8,8 @@ import json
 # Create your views here.
 def index(request):
     network_df = pd.read_csv(static("Dashboard/resources/SWaT/data2017_time_SWaT.csv").replace("/", "./Dashboard/", 1))
+    network_slice_df = network_df[network_df["StartTime"] == '14-06-2017 03:50:00.000000']
+    print(network_slice_df.shape)
 
     dst_file = open(static("Dashboard/resources/SWaT/2017_SWAT_dst_ips.json").replace("/", "./Dashboard/", 1))
     dst_obj = json.load(dst_file)
@@ -19,8 +21,11 @@ def index(request):
     unique_ips_obj = json.load(unique_ips_file)
 
     return render(request, "Dashboard/index.html", {
-        'dataset': network_df[0:2].to_json(orient="records"),
+        'dataset': network_slice_df.to_json(orient="records"),
         'destination_ips': json.dumps(dst_obj),
         'source_ips': json.dumps(src_obj),
         'unique_ips': json.dumps(unique_ips_obj)
         })
+
+def table(request):
+    return HttpResponse("Hello World")
