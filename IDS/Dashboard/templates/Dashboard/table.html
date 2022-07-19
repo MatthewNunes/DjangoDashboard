@@ -1,9 +1,24 @@
-<html>
-  <head>
-    {% load static %}
-    <title>Network Table</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/main_styles.css' %}">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-  </head>
+{% extends "Dashboard/base_generic.html" %}
+{% load static %}
 
-</html>
+{% block title %}
+  <title>Network Table</title>
+{% endblock %}
+
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/main_styles.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/table_styles.css' %}">
+{% endblock %}
+
+{% block main %}
+  <div class="main_area"></div>
+{% endblock %}
+
+{% block scripts %}
+  <script type="text/javascript" src="{% static 'Dashboard/js/overview.js' %}"></script>
+  <script type="text/javascript">
+    var data = JSON.parse("{{dataset|escapejs}}");
+    var unique_ips = JSON.parse("{{unique_ips|escapejs}}");
+    drawTable(data, unique_ips);
+  </script>
+{% endblock %}

@@ -1,4 +1,4 @@
-async function loadSwatData(dataset, dst_nums, src_nums, ip_address_map) {
+function loadSwatData(dataset, dst_nums, src_nums, ip_address_map) {
   // for (const key of Object.keys(dataset["StartTime"])) {
   //   let oldDate = dataset["StartTime"][key];
   //   dataset["StartTime"][key] = new Date(oldDate.split("-")[2].split(" ")[0], oldDate.split("-")[1], oldDate.split("-")[0], oldDate.split(" ")[1].split(":")[0], oldDate.split(" ")[1].split(":")[1], oldDate.split(" ")[1].split(":")[2].split(".")[0]);
@@ -359,7 +359,7 @@ function hideLabel(div) {
 
 function drawTable(dataset, ipaddress_map) {
   // load data
-  const table = d3.select(".network_traffic");
+  const table = d3.select(".main_area");
 
   const numberOfRows= 60
 
