@@ -4,6 +4,7 @@ from django.templatetags.static import static
 import pandas as pd
 import os
 import json
+from .models import Device
 
 # Create your views here.
 def index(request):
@@ -42,3 +43,21 @@ def table(request):
         'dataset': network_slice_df.to_json(orient="records"),
         'unique_ips': json.dumps(unique_ips_obj)
     })
+
+
+
+def addDevicesToDatabase(request):
+    src_file = open(static("Dashboard/resources/SWaT/2017_SWAT_src_ips.json").replace("/", "./Dashboard/", 1))
+    src_obj = json.load(src_file)
+    src_file.close()
+
+    unique_ips_file = open(static("Dashboard/resources/SWaT/unique_vals_ips_reversed_SWAT.json").replace("/", "./Dashboard/", 1))
+    unique_ips_obj = json.load(unique_ips_file)
+    unique_ips_file.close()
+
+    for num_id in src_obj:
+        address = unique_ips_obj[str(num_id)]
+        d = Device(ip_address=address, log_id=num_id)
+        d.save()
+
+    return HttpResponse("Called")
