@@ -1,35 +1,12 @@
+{% extends "Dashboard/base_generic.html" %}
 
-<html>
-  <head>
-    {% load static %}
-    <title>Main Page</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/main_styles.css' %}">
-    <link rel="icon" type="image/x-icon" href="{% static 'Dashboard/img/favicon_io/favicon.ico' %}">
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-  </head>
-  <body>
-    <div class="grid_container">
-      <div class="navbar">
-        <!-- <ul>
-          <li class="primary"><a href="#">Overview</a></li>
-          <li><a href="#">Devices</a></li>
-          <li><a href="#">Alerts</a></li>
-          <li><a href="#">Vulnerabilities</a></li>
-        </ul> -->
-        <div class="overview-group">
-          <button class="accordion">Overview</button>
-          <button class="secondary" style="border-bottom: 1px solid black"><a href="/dashboard">Network</a></button>
-          <button class="secondary"><a href="/dashboard/table">Table</a></button>
-        </div>
-        <button class="accordion">Devices</button>
-        <button class="accordion">Alerts</button>
-        <button class="accordion">Vulnerabilities</button>
-      </div>
-      <div class="main_area"></div>
-      <!-- <div class="network_traffic"></div>
-      <div class="registers"></div> -->
-    </div>
-  </body>
+{% load static %}
+
+{% block main %}
+  <div class="main_area"></div>
+{% endblock %}
+
+{% block scripts %}
   <script type="text/javascript" src="{% static 'Dashboard/js/overview.js' %}"></script>
   <script type="text/javascript">
     console.log("I get called");
@@ -40,32 +17,4 @@
 
     loadSwatData(data, dst_ips, src_ips, unique_ips);
   </script>
-  <script type="text/javascript">
-    var acc = document.getElementsByClassName("accordion");
-    var i;
-
-    for (i = 0; i < acc.length; i++) {
-      acc[i].addEventListener("click", function() {
-      /* Toggle between adding and removing the "active" class,
-      to highlight the button that controls the panel */
-      this.classList.toggle("active");
-
-      /* Toggle between hiding and showing the active panel */
-      var panels = this.parentElement.getElementsByClassName("secondary");
-      // var panel = this.nextElementSibling;
-      for (let j =0; j<panels.length; j++) {
-        if (panels[j].style.display === "block") {
-            panels[j].style.display = "none";
-            panels[j].style.maxHeight = null;
-         } else {
-           panels[j].style.display = "block";
-           panels[j].style.maxHeight = panels[j].scrollHeight + "px";
-
-         }
-       }
-
-       });
-     }
-  </script>
-
-</html>
+{% endblock %}

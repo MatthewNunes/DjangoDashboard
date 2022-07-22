@@ -44,6 +44,8 @@ def table(request):
         'unique_ips': json.dumps(unique_ips_obj)
     })
 
+def device(request):
+    return HttpResponse("I work")
 
 
 def addDevicesToDatabase(request):
