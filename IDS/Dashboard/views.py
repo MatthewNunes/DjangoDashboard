@@ -25,7 +25,8 @@ def index(request):
         'dataset': network_slice_df.to_json(orient="records"),
         'destination_ips': json.dumps(dst_obj),
         'source_ips': json.dumps(src_obj),
-        'unique_ips': json.dumps(unique_ips_obj)
+        'unique_ips': json.dumps(unique_ips_obj),
+        'source_model': Device.objects.all(),
         })
 
 def table(request):
@@ -45,7 +46,7 @@ def table(request):
     })
 
 def device(request):
-    return HttpResponse("I work")
+    return render(request, "Dashboard/device.html")
 
 
 def addDevicesToDatabase(request):

@@ -1,0 +1,36 @@
+.grid_container {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: min-content 1fr;
+  grid-template-areas: "nav main main main main"
+                       "nav sub1 sub1 sub2 sub2";
+}
+
+.grid_container > div {
+  background-color: rgba(255, 255, 255, 0.8);
+  padding: 20px;
+}
+
+.main_area {
+  grid-area: main;
+}
+
+.navbar {
+  grid-area: nav;
+  padding: 0;
+  margin: 0;
+}
+
+.network_traffic {
+  grid-area: sub1;
+  overflow: scroll;
+}
+
+.registers {
+  grid-area: sub2;
+  overflow: scroll;
+}
+
+.grid_container > .navbar {
+  padding: 0;
+}

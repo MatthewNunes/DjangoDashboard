@@ -4,6 +4,7 @@
     {% block title %}<title>Main Page</title>{% endblock %}
     {% block styles %}
       <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/main_styles.css' %}">
+      <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/main_grid.css' %}">
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{% static 'Dashboard/img/favicon_io/favicon.ico' %}">
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -24,8 +25,8 @@
         </div>
         <div class="devices-group">
           <button class="accordion">Devices</button>
-          {% for src in src_list %}
-            <button class="secondary">{{ src }}</button>
+          {% for src in source_model %}
+            <button class="secondary">{{ src.ip_address }}</button>
           {% endfor %}
         </div>
         <button class="accordion">Alerts</button>
