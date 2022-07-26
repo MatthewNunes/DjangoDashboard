@@ -1,9 +1,9 @@
 .grid_container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  grid-template-rows: min-content 1fr;
-  grid-template-areas: "nav main main main main"
-                       "nav sub1 sub1 sub2 sub2";
+  grid-template-rows: 50px min-content;
+  grid-template-areas: "nav ban ban ban ban"
+                       "nav main main main main";
 }
 
 .grid_container > div {
@@ -21,14 +21,17 @@
   margin: 0;
 }
 
-.network_traffic {
-  grid-area: sub1;
-  overflow: scroll;
+.banner {
+  grid-area: ban;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.registers {
-  grid-area: sub2;
-  overflow: scroll;
+.grid_container > .banner {
+  padding: 0;
 }
 
 .grid_container > .navbar {

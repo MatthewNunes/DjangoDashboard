@@ -8,6 +8,22 @@
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{% static 'Dashboard/img/favicon_io/favicon.ico' %}">
     <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script type="text/javascript">
+      var time_list = JSON.parse("{{time_list|escapejs}}");
+      function next() {
+        let currentValue = document.getElementById("time").value;
+        let index = time_list.indexOf(currentValue);
+        index++;
+        document.getElementById("time").value = time_list[index];
+      }
+
+      function previous() {
+        let currentValue = document.getElementById("time").value;
+        let index = time_list.indexOf(currentValue);
+        index--;
+        document.getElementById("time").value = time_list[index];
+      }
+    </script>
   </head>
   <body>
     <div class="grid_container">
@@ -31,6 +47,15 @@
         </div>
         <button class="accordion">Alerts</button>
         <button class="accordion">Vulnerabilities</button>
+      </div>
+      <div class="banner">
+        <form action="{% url 'index' %}" method="GET">
+        {% csrf_token %}
+          <button type="button" onclick="previous()"><<</button>
+            <input type="text" id="time" name="time" value="{{ current_time }}"/>
+          <button type="button" onclick="next()">>></button>
+          <input type="submit" value="Go"  />
+        </form>
       </div>
       {% block main %}
         <!-- <div class="main_area"></div> -->
@@ -76,5 +101,7 @@
        });
      }
   </script>
+
+
 
 </html>
