@@ -6,6 +6,10 @@ import os
 import json
 from .models import Device
 
+
+def selectData():
+    pass
+
 # Create your views here.
 def index(request):
     network_df = pd.read_csv(static("Dashboard/resources/SWaT/data2017_time_SWaT.csv").replace("/", "./Dashboard/", 1))
@@ -42,11 +46,16 @@ def table(request):
     return render(request, "Dashboard/table.html", {
         'src_list': src_obj,
         'dataset': network_slice_df.to_json(orient="records"),
-        'unique_ips': json.dumps(unique_ips_obj)
+        'unique_ips': json.dumps(unique_ips_obj),
+        'source_model': Device.objects.all(),
     })
 
-def device(request):
-    return render(request, "Dashboard/device.html")
+def device(request, id):
+    selected_device = Device.objects.get(pk=id)
+    return render(request, "Dashboard/device.html", {
+     'source_model': Device.objects.all(),
+     'selected_device': selected_device,
+    })
 
 
 def addDevicesToDatabase(request):

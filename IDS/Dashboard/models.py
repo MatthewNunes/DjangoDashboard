@@ -26,5 +26,6 @@ class Device(models.Model):
     log_id = models.IntegerField()
     type = models.CharField(max_length=64, choices=device_types, default='Machine')
     description = models.CharField(max_length=150, blank=True)
+    process = models.CharField(max_length=2, blank=True)
     def __str__(self):
-        return f"{self.ip_address}"
+        return f"{self.ip_address} {self.type}"

@@ -26,7 +26,7 @@
         <div class="devices-group">
           <button class="accordion">Devices</button>
           {% for src in source_model %}
-            <button class="secondary">{{ src.ip_address }}</button>
+            <a href="{% url 'device' src.id %}"><button class="secondary">{{ src.ip_address }}</button></a>
           {% endfor %}
         </div>
         <button class="accordion">Alerts</button>
