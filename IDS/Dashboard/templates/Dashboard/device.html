@@ -19,10 +19,22 @@
 
   <div class="details">
     <h2>{{ selected_device.ip_address }}</h2>
-    <b>Device Type: </b>{{ selected_device.type }} <br />
-    {% for label, value in percent_vals_dict.items %}
-      {{label}}: {{value}} <br />
-    {% endfor %}
+    <table>
+      <tr>
+        <th>Field</th>
+        <th>Details</th>
+      </tr>
+      <tr>
+        <td>Device Type</td>
+        <td>{{ selected_device.type }}</td>
+      </tr>
+      {% for label, value in percent_vals_dict.items %}
+        <tr data-json="{{viz_dict[label]}}">
+          <td>{{label}}</td>
+          <td>{{value}}</td>
+        </tr>
+      {% endfor %}
+    </table>
   </div>
   <div class="diagram">
     <svg width=1000 height=600>

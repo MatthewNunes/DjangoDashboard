@@ -81,6 +81,7 @@ def device(request, id):
     global network_df
     handleGet(request)
     field_stats = ["SrcBytes", "SrcPkts", "DstBytes", "DstPkts"]
+    field_names = {"SrcBytes": "Source Bytes", "SrcPkts": "Source Packets", "DstBytes": "Destination Bytes", "DstPkts": "Destination Packets"}
     selected_device = Device.objects.get(pk=id)
 
     time_aslist = list(time_list)
@@ -88,14 +89,14 @@ def device(request, id):
     current_slice = network_df[network_df["StartTime"].isin(time_aslist[0:current_index+1])]
     current_group = current_slice.groupby(["SrcAddr"]).sum()
 
-    print(current_group.columns)
     percent_vals_dict = {}
+    viz_dict = {}
     for field in field_stats:
         total = current_group[field].sum()
         percentage_val = current_group.loc[[selected_device.log_id]][field].to_numpy()[0] / total
         percentage_val = percentage_val * 100
-        percent_vals_dict[field] = percentage_val
-
+        percent_vals_dict[field_names[field]] = round(percentage_val, 2)
+        viz_dict[field_names[field]] = json.dumps(current_group[field].to_json())
 
     return render(request, "Dashboard/device.html", {
      'time_list': json.dumps(list(time_list)),
@@ -103,6 +104,7 @@ def device(request, id):
      'source_model': Device.objects.all(),
      'selected_device': selected_device,
      'percent_vals_dict': percent_vals_dict,
+     'viz_dict': viz_dict,
     })
 
 
