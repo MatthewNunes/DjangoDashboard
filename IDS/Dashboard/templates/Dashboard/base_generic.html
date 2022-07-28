@@ -49,7 +49,7 @@
         <button class="accordion">Vulnerabilities</button>
       </div>
       <div class="banner">
-        <form action="{% url 'index' %}" method="GET">
+        <form action="{{ request.path }}" method="GET">
         {% csrf_token %}
           <button type="button" onclick="previous()"><<</button>
             <input type="text" id="time" name="time" value="{{ current_time }}"/>

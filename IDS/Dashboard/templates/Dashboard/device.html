@@ -19,7 +19,10 @@
 
   <div class="details">
     <h2>{{ selected_device.ip_address }}</h2>
-    <b>Device Type: </b>{{ selected_device.type }}
+    <b>Device Type: </b>{{ selected_device.type }} <br />
+    {% for label, value in percent_vals_dict.items %}
+      {{label}}: {{value}} <br />
+    {% endfor %}
   </div>
   <div class="diagram">
     <svg width=1000 height=600>
