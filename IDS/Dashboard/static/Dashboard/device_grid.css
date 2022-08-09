@@ -3,7 +3,8 @@
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 50px min-content;
   grid-template-areas: "nav ban ban ban ban"
-                       "nav sub1 sub1 sub2 sub2";
+                       "nav sub1 sub1 sub2 sub2"
+                       "nav viz viz sub2 sub2";
 }
 
 .grid_container > div {
@@ -13,6 +14,10 @@
 
 .details {
   grid-area: sub1;
+}
+
+.viz {
+  grid-area: viz;
 }
 
 .navbar {

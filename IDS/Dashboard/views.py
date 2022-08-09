@@ -20,7 +20,6 @@ def handleGet(request):
     if request.method == 'GET':
         if (request.GET.get('time') != None):
             current_time = request.GET.get('time')
-            print(current_time)
 # Create your views here.
 def index(request):
     global current_time
@@ -30,7 +29,6 @@ def index(request):
 
 
     network_slice_df = network_df[network_df["StartTime"] == current_time]
-    print(network_slice_df.shape)
 
     dst_file = open(static("Dashboard/resources/SWaT/2017_SWAT_dst_ips.json").replace("/", "./Dashboard/", 1))
     dst_obj = json.load(dst_file)
@@ -95,8 +93,10 @@ def device(request, id):
         total = current_group[field].sum()
         percentage_val = current_group.loc[[selected_device.log_id]][field].to_numpy()[0] / total
         percentage_val = percentage_val * 100
+        current_group_percents = current_group[field] / total
+        current_group_percents = current_group_percents * 100
         percent_vals_dict[field_names[field]] = round(percentage_val, 2)
-        viz_dict[field_names[field]] = json.dumps(current_group[field].to_json())
+        viz_dict[field_names[field]] = current_group_percents.to_json()
 
     return render(request, "Dashboard/device.html", {
      'time_list': json.dumps(list(time_list)),
@@ -104,7 +104,7 @@ def device(request, id):
      'source_model': Device.objects.all(),
      'selected_device': selected_device,
      'percent_vals_dict': percent_vals_dict,
-     'viz_dict': viz_dict,
+     'viz_dict': json.dumps(viz_dict),
     })
 
 
