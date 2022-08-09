@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.templatetags.static import static
+from django.core import serializers
 import pandas as pd
 import os
 import json
@@ -81,6 +82,7 @@ def device(request, id):
     field_stats = ["SrcBytes", "SrcPkts", "DstBytes", "DstPkts"]
     field_names = {"SrcBytes": "Source Bytes", "SrcPkts": "Source Packets", "DstBytes": "Destination Bytes", "DstPkts": "Destination Packets"}
     selected_device = Device.objects.get(pk=id)
+    all_devices = serializers.serialize("json", Device.objects.all())
 
     time_aslist = list(time_list)
     current_index = time_aslist.index(current_time)
@@ -104,7 +106,8 @@ def device(request, id):
      'source_model': Device.objects.all(),
      'selected_device': selected_device,
      'percent_vals_dict': percent_vals_dict,
-     'viz_dict': json.dumps(viz_dict),
+     'viz_dict': viz_dict,
+     'all_devices': all_devices,
     })
 
 

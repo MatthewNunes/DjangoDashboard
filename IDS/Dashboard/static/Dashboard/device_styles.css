@@ -1,9 +1,9 @@
-rect {
+.diagram rect {
   fill: none;
   stroke: black;
 }
 
-line {
+.diagram line {
   stroke: black;
 }
 

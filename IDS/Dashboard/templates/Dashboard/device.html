@@ -8,7 +8,7 @@
 
   <style>
     {% if selected_device.process != "" %}
-    .{{ selected_device.process }} {
+    .diagram .{{ selected_device.process }} {
       stroke: red;
     }
     {% endif %}
@@ -130,54 +130,98 @@
 {% block scripts %}
   <script type="text/javascript">
     function visualiseThis(data, log_id) {
-      var dataset = JSON.parse(data);
+      var dataset = Object.entries(data);
+      var data_obj = new Array(dataset.length);
+      var all_devices = {{ all_devices|safe  }};
+    //  dataset = dataset.map(x => {'id': parseInt(x[0]), 'value': x[1]});
+      for (let i = 0; i < dataset.length; i++) {
+         data_obj[i] = {id: parseInt(dataset[i][0]), val: dataset[i][1]};
+      }
+
+
+
+      ip_address_accessor = (current_val) => all_devices.filter(device => device.fields['log_id'] === current_val)
+      console.log(all_devices);
 
       // set the dimensions and margins of the graph
       var margin = {top: 20, right: 30, bottom: 40, left: 90},
           width = 460 - margin.left - margin.right,
           height = 400 - margin.top - margin.bottom;
 
+      var x = d3.scaleLinear()
+           .domain([0, d3.max(data_obj, d => d.val)])
+           .range([ 0, width]);
+
+     var y = d3.scaleBand()
+          .range([ 0, height ])
+          .domain(data_obj.map((x) => ip_address_accessor(x.id)[0].fields.ip_address))
+          .padding(.1);
+
       // append the svg object to the body of the page
-      var svg = d3.select(".viz")
-        .append("svg")
-          .attr("width", width + margin.left + margin.right)
-          .attr("height", height + margin.top + margin.bottom)
-        .append("g")
-          .attr("transform",
-                "translate(" + margin.left + "," + margin.top + ")");
+      var check = d3.select(".viz svg")
+      if (check.empty()) {
+        var svg = d3.select(".viz")
+          .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+          .append("g")
+            .attr("class", "main")
+            .attr("transform",
+                  "translate(" + margin.left + "," + margin.top + ")");
 
-      console.log(dataset);
-        // Add X axis
-        // var x = d3.scaleLinear()
-        //   .domain([0, d3.max(data)])
-        //   .range([ 0, width]);
-        // svg.append("g")
-        //   .attr("transform", "translate(0," + height + ")")
-        //   .call(d3.axisBottom(x))
-        //   .selectAll("text")
-        //     .attr("transform", "translate(-10,0)rotate(-45)")
-        //     .style("text-anchor", "end");
+      } else {
+        console.log("I call update");
+        update(data_obj, log_id, d3.select(".viz svg .main"), x, y, ip_address_accessor);
+        return;
+      }
+
+      //Add X axis
+         svg.append("g")
+           .attr("transform", "translate(0," + height + ")")
+           .call(d3.axisBottom(x))
+           .selectAll("text")
+             .attr("transform", "translate(-10,0)rotate(-45)")
+             .style("text-anchor", "end");
+
+      // Y axis
+         svg.append("g")
+           .call(d3.axisLeft(y));
         //
-        // // Y axis
-        // var y = d3.scaleBand()
-        //   .range([ 0, height ])
-        //   .domain(data.map(function(d) { return d.Country; }))
-        //   .padding(.1);
-        // svg.append("g")
-        //   .call(d3.axisLeft(y))
-        //
-        // //Bars
-        // svg.selectAll("myRect")
-        //   .data(data)
-        //   .enter()
-        //   .append("rect")
-        //   .attr("x", x(0) )
-        //   .attr("y", function(d) { return y(d.Country); })
-        //   .attr("width", function(d) { return x(d.Value); })
-        //   .attr("height", y.bandwidth() )
-        //   .attr("fill", "#69b3a2")
+      //Bars
+      svg.selectAll("myRect")
+        .data(data_obj)
+        .enter()
+        .append("rect")
+          .attr("x", x(0) )
+          .attr("y", function(d) { return y(ip_address_accessor(d.id)[0].fields.ip_address); })
+          .attr("width", function(d) { return x(d.val); })
+          .attr("height", y.bandwidth() )
+          .attr("fill", function(d) {
+            if (d.id === log_id) {
+              return "#b3697a";
+            } else {
+              return "#69b3a2";
+            }
+          })
 
 
+    }
+    function update(data_obj, log_id, svg, x, y, ip_address_accessor) {
+      svg.selectAll("myRect")
+        .data(data_obj)
+        .join()
+        .append("rect")
+          .attr("x", x(0) )
+          .attr("y", function(d) { return y(ip_address_accessor(d.id)[0].fields.ip_address); })
+          .attr("width", function(d) { return x(d.val); })
+          .attr("height", y.bandwidth() )
+          .attr("fill", function(d) {
+            if (d.id === log_id) {
+              return "#b3697a";
+            } else {
+              return "#69b3a2";
+            }
+          })
     }
   </script>
 {% endblock %}
