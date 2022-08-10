@@ -209,6 +209,8 @@
       d3.selectAll(".main rect")
         .data(data_obj)
         .join("rect")
+          .transition()
+          .duration(1000)
           .attr("x", x(0) )
           .attr("y", function(d) { return y(ip_address_accessor(d.id)[0].fields.ip_address); })
           .attr("width", function(d) { return x(d.val); })
@@ -221,6 +223,7 @@
               return "#69b3a2";
             }
           })
+
     }
   </script>
 {% endblock %}
