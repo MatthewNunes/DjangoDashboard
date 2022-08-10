@@ -82,7 +82,8 @@ def device(request, id):
     field_stats = ["SrcBytes", "SrcPkts", "DstBytes", "DstPkts"]
     field_names = {"SrcBytes": "Source Bytes", "SrcPkts": "Source Packets", "DstBytes": "Destination Bytes", "DstPkts": "Destination Packets"}
     selected_device = Device.objects.get(pk=id)
-    all_devices = serializers.serialize("json", Device.objects.all())
+    all_devices_json = serializers.serialize("json", Device.objects.all())
+    all_devices = Device.objects.all()
 
     time_aslist = list(time_list)
     current_index = time_aslist.index(current_time)
@@ -93,12 +94,17 @@ def device(request, id):
     viz_dict = {}
     for field in field_stats:
         total = current_group[field].sum()
-        percentage_val = current_group.loc[[selected_device.log_id]][field].to_numpy()[0] / total
-        percentage_val = percentage_val * 100
-        current_group_percents = current_group[field] / total
-        current_group_percents = current_group_percents * 100
-        percent_vals_dict[field_names[field]] = round(percentage_val, 2)
-        viz_dict[field_names[field]] = current_group_percents.to_json()
+        if selected_device.log_id in current_group.index:
+            percentage_val = current_group.loc[[selected_device.log_id]][field].to_numpy()[0] / total
+            percentage_val = percentage_val * 100
+            percent_vals_dict[field_names[field]] = round(percentage_val, 2)
+
+            current_group_percents = current_group[field] / total
+            current_group_percents = current_group_percents * 100
+            for device in all_devices:
+                if device.log_id not in current_group_percents:
+                    current_group_percents = pd.concat([current_group_percents, pd.Series([0],index=[device.log_id])])
+            viz_dict[field_names[field]] = current_group_percents.to_json()
 
     return render(request, "Dashboard/device.html", {
      'time_list': json.dumps(list(time_list)),
@@ -107,7 +113,7 @@ def device(request, id):
      'selected_device': selected_device,
      'percent_vals_dict': percent_vals_dict,
      'viz_dict': viz_dict,
-     'all_devices': all_devices,
+     'all_devices': all_devices_json,
     })
 
 

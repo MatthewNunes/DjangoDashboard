@@ -141,7 +141,6 @@
 
 
       ip_address_accessor = (current_val) => all_devices.filter(device => device.fields['log_id'] === current_val)
-      console.log(all_devices);
 
       // set the dimensions and margins of the graph
       var margin = {top: 20, right: 30, bottom: 40, left: 90},
@@ -207,16 +206,16 @@
 
     }
     function update(data_obj, log_id, svg, x, y, ip_address_accessor) {
-      svg.selectAll("myRect")
+      d3.selectAll(".main rect")
         .data(data_obj)
-        .join()
-        .append("rect")
+        .join("rect")
           .attr("x", x(0) )
           .attr("y", function(d) { return y(ip_address_accessor(d.id)[0].fields.ip_address); })
           .attr("width", function(d) { return x(d.val); })
           .attr("height", y.bandwidth() )
           .attr("fill", function(d) {
             if (d.id === log_id) {
+              console.log("I get here");
               return "#b3697a";
             } else {
               return "#69b3a2";
