@@ -7,5 +7,5 @@ urlpatterns = [
     path('table/', views.table, name="table"),
 #    path('device/', views.device, name="device"),
     path('device/<int:id>/', views.device, name="device"),
-    path('autoAdd/', views.addDevicesToDatabase, name="AutoAdd"),
+    path('autoAdd/', views.addPhysicalToDatabase, name="AutoAdd"),
 ]

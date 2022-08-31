@@ -5,13 +5,19 @@ from django.core import serializers
 import pandas as pd
 import os
 import json
-from .models import Device
+from .models import Device, Microcontroller
+from sklearn.ensemble import IsolationForest
+
 
 
 network_df = pd.read_csv(static("Dashboard/resources/SWaT/data2017_time_SWaT.csv").replace("/", "./Dashboard/", 1))
 time_list = network_df["StartTime"].unique()
 current_time = time_list[0]
 
+training_network_df = network_df.drop(['StartTime', 'LastTime', 'Classification', 'SrcAddr', 'DstAddr'], axis=1)
+clf = IsolationForest(n_estimators=20, warm_start=True)
+clf.fit(training_network_df.to_numpy())
+print(clf.offset_)
 
 #current_slice = network_df[network_df["StartTime"] == current_time].groupby(["SrcAddr"]).sum()
 #print(current_slice)
@@ -116,6 +122,23 @@ def device(request, id):
      'all_devices': all_devices_json,
     })
 
+def alert(request):
+    return render(request, "Dashboard/device.html", {
+     'time_list': json.dumps(list(time_list)),
+     'current_time': current_time,
+     'source_model': Device.objects.all(),
+    })
+
+def addPhysicalToDatabase(request):
+    src_file = open(static("Dashboard/resources/SWaT/physical_devices.csv").replace("/", "./Dashboard/", 1))
+    for line in src_file:
+        id = line.split(",")[0].strip()
+        type = line.split(",")[1].strip()
+        desc = line.split(",")[2].strip()
+        c = Microcontroller(device_id=id, type=type, description=desc)
+        c.save()
+    src_file.close()
+    return HttpResponse("Called")
 
 def addDevicesToDatabase(request):
     src_file = open(static("Dashboard/resources/SWaT/2017_SWAT_src_ips.json").replace("/", "./Dashboard/", 1))
