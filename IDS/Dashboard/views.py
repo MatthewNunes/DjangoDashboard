@@ -17,7 +17,6 @@ current_time = time_list[0]
 training_network_df = network_df.drop(['StartTime', 'LastTime', 'Classification', 'SrcAddr', 'DstAddr'], axis=1)
 clf = IsolationForest(n_estimators=20, warm_start=True)
 clf.fit(training_network_df.to_numpy())
-print(clf.offset_)
 
 #current_slice = network_df[network_df["StartTime"] == current_time].groupby(["SrcAddr"]).sum()
 #print(current_slice)
@@ -123,7 +122,11 @@ def device(request, id):
     })
 
 def alert(request):
-    return render(request, "Dashboard/device.html", {
+    global current_time
+    global time_list
+    global network_df
+    handleGet(request)
+    return render(request, "Dashboard/alert.html", {
      'time_list': json.dumps(list(time_list)),
      'current_time': current_time,
      'source_model': Device.objects.all(),

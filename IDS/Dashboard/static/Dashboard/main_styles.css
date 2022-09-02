@@ -67,3 +67,15 @@ div.tooltip {
   overflow: hidden;
   transition: max-height 0.2s ease-out;
 }
+
+.tertiary {
+  display: none;
+  padding: 18px;
+  width: 100%;
+  font-size: 15px;
+  border: none;
+  background-color: #eee;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+}

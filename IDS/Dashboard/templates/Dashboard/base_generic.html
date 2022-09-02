@@ -45,7 +45,15 @@
             <a href="{% url 'device' src.id %}"><button class="secondary">{{ src.ip_address }}</button></a>
           {% endfor %}
         </div>
-        <button class="accordion">Alerts</button>
+        <div class='alerts-group'>
+          <button class="accordion">Alerts</button>
+            <button class="secondary">High</button>
+              <button class="high tertiary">Test1</button>
+            <button class="secondary">Medium</button>
+              <button class="medium tertiary">Test2</button>
+            <button class="secondary">Low</button>
+              <button class="low tertiary">Test3</button>
+        </div>
         <button class="accordion">Vulnerabilities</button>
       </div>
       <div class="banner">
@@ -75,31 +83,66 @@
     </script> -->
   {% endblock %}
   <script type="text/javascript">
-    var acc = document.getElementsByClassName("accordion");
-    var i;
+    function addAccordionAnimation(primary_class, secondary_class){
+      var acc = document.querySelectorAll(primary_class);
+      var i;
 
-    for (i = 0; i < acc.length; i++) {
-      acc[i].addEventListener("click", function() {
-      /* Toggle between adding and removing the "active" class,
-      to highlight the button that controls the panel */
-      this.classList.toggle("active");
+      for (i = 0; i < acc.length; i++) {
+        acc[i].addEventListener("click", function() {
+        /* Toggle between adding and removing the "active" class,
+        to highlight the button that controls the panel */
+        this.classList.toggle("active");
 
-      /* Toggle between hiding and showing the active panel */
-      var panels = this.parentElement.getElementsByClassName("secondary");
-      // var panel = this.nextElementSibling;
-      for (let j =0; j<panels.length; j++) {
-        if (panels[j].style.display === "block") {
-            panels[j].style.display = "none";
-            panels[j].style.maxHeight = null;
-         } else {
-           panels[j].style.display = "block";
-           panels[j].style.maxHeight = panels[j].scrollHeight + "px";
+        /* Toggle between hiding and showing the active panel */
+        var panels = this.parentElement.getElementsByClassName(secondary_class);
+        console.log(this.getElementsByClassName(secondary_class));
+        // var panel = this.nextElementSibling;
+        for (let j =0; j<panels.length; j++) {
+          if (panels[j].style.display === "block") {
+              panels[j].style.display = "none";
+              panels[j].style.maxHeight = null;
+           } else {
+             panels[j].style.display = "block";
+             panels[j].style.maxHeight = panels[j].scrollHeight + "px";
 
+           }
          }
-       }
 
-       });
+         });
+       }
      }
+
+     function addSecondaryAnimation(primary_class, secondary_class){
+       var acc = document.querySelectorAll(primary_class);
+       var i;
+
+       for (i = 0; i < acc.length; i++) {
+         acc[i].addEventListener("click", function() {
+         /* Toggle between adding and removing the "active" class,
+         to highlight the button that controls the panel */
+         this.classList.toggle("active");
+
+         /* Toggle between hiding and showing the active panel */
+         var panels = this.parentElement.getElementsByClassName(this.innerHTML + " " + secondary_class);
+         //console.log(this.getElementsByClassName(secondary_class));
+         // var panel = this.nextElementSibling;
+         for (let j =0; j<panels.length; j++) {
+           if (panels[j].style.display === "block") {
+               panels[j].style.display = "none";
+               panels[j].style.maxHeight = null;
+            } else {
+              panels[j].style.display = "block";
+              panels[j].style.maxHeight = panels[j].scrollHeight + "px";
+
+            }
+          }
+
+          });
+        }
+      }
+     addAccordionAnimation(".accordion", "secondary");
+     addSecondaryAnimation("div > .secondary", "tertiary");
+
   </script>
 
 

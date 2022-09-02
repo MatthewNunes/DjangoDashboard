@@ -39,4 +39,5 @@ class Microcontroller(models.Model):
 
 class Alert(models.Model):
     start_time = models.DateTimeField()
+    severity = models.CharField(max_length=15, blank=True)
     microcontroller = models.ManyToManyField(Microcontroller)
