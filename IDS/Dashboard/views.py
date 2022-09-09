@@ -5,7 +5,7 @@ from django.core import serializers
 import pandas as pd
 import os
 import json
-from .models import Device, Microcontroller
+from .models import Device, Microcontroller, Alert
 from sklearn.ensemble import IsolationForest
 
 
@@ -14,9 +14,6 @@ network_df = pd.read_csv(static("Dashboard/resources/SWaT/data2017_time_SWaT.csv
 time_list = network_df["StartTime"].unique()
 current_time = time_list[0]
 
-training_network_df = network_df.drop(['StartTime', 'LastTime', 'Classification', 'SrcAddr', 'DstAddr'], axis=1)
-clf = IsolationForest(n_estimators=20, warm_start=True)
-clf.fit(training_network_df.to_numpy())
 
 #current_slice = network_df[network_df["StartTime"] == current_time].groupby(["SrcAddr"]).sum()
 #print(current_slice)
@@ -26,13 +23,20 @@ def handleGet(request):
     if request.method == 'GET':
         if (request.GET.get('time') != None):
             current_time = request.GET.get('time')
+
+def getAlerts():
+    critical_alerts = Alert.objects.filter(severity="Critical")
+    high_alerts = Alert.objects.filter(severity="High")
+    medium_alerts = Alert.objects.filter(severity="Medium")
+    low_alerts = Alert.objects.filter(severity="Low")
+    return critical_alerts, high_alerts, medium_alerts, low_alerts
 # Create your views here.
 def index(request):
     global current_time
     global time_list
     global network_df
     handleGet(request)
-
+    critical_alerts, high_alerts, medium_alerts, low_alerts = getAlerts()
 
     network_slice_df = network_df[network_df["StartTime"] == current_time]
 
@@ -54,6 +58,10 @@ def index(request):
         'source_model': Device.objects.all(),
         'time_list': json.dumps(list(time_list)),
         'current_time': current_time,
+        'critical_alerts': critical_alerts,
+        'high_alerts': high_alerts,
+        'medium_alerts': medium_alerts,
+        'low_alerts': low_alerts,
         })
 
 def table(request):
@@ -89,6 +97,7 @@ def device(request, id):
     selected_device = Device.objects.get(pk=id)
     all_devices_json = serializers.serialize("json", Device.objects.all())
     all_devices = Device.objects.all()
+    critical_alerts, high_alerts, medium_alerts, low_alerts = getAlerts()
 
     time_aslist = list(time_list)
     current_index = time_aslist.index(current_time)
@@ -119,17 +128,46 @@ def device(request, id):
      'percent_vals_dict': percent_vals_dict,
      'viz_dict': viz_dict,
      'all_devices': all_devices_json,
+     'critical_alerts': critical_alerts,
+     'high_alerts': high_alerts,
+     'medium_alerts': medium_alerts,
+     'low_alerts': low_alerts,
     })
 
-def alert(request):
+def alert(request, id):
     global current_time
     global time_list
     global network_df
     handleGet(request)
+    critical_alerts, high_alerts, medium_alerts, low_alerts = getAlerts()
+    alert_obj = Alert.objects.get(pk=id)
+    microcontrollers = alert_obj.microcontroller.all()
+    names = []
+    full_names = []
+    for controller in microcontrollers:
+        names.append(controller.device_id.split("-")[1][0])
+        full_names.append(controller.device_id)
+    #There are six stages
+    cost = len(list(set(names))) / 6
+    #6 gallons produced per minute normally
+    #7200 per hour
+    output_loss = cost * 7200
+    alert_df = pd.read_csv(static("Dashboard/resources/" + alert_obj.physical_file).replace("/", "./Dashboard/", 1))
+
+
+
     return render(request, "Dashboard/alert.html", {
      'time_list': json.dumps(list(time_list)),
      'current_time': current_time,
+     'output_loss': output_loss,
      'source_model': Device.objects.all(),
+     'alert_obj': alert_obj,
+     'alert_df': alert_df.to_json(orient="records"),
+     'full_microcontroller_names': json.dumps(full_names),
+     'critical_alerts': critical_alerts,
+     'high_alerts': high_alerts,
+     'medium_alerts': medium_alerts,
+     'low_alerts': low_alerts,
     })
 
 def addPhysicalToDatabase(request):
@@ -157,4 +195,22 @@ def addDevicesToDatabase(request):
         d = Device(ip_address=address, log_id=num_id)
         d.save()
 
+    return HttpResponse("Called")
+
+def addAlertToDatabase(request):
+    alert_df = pd.read_csv(static("Dashboard/resources/SWaT/attack_one.csv").replace("/", "./Dashboard/", 1))
+    start_time = alert_df["Timestamp"][0]
+    severity = "Medium"
+    physical_file = "SWaT/attack_one.csv"
+    devices = list(Microcontroller.objects.filter(device_id="FIT-502"))
+    devices.extend(list(Microcontroller.objects.filter(device_id="AIT-203")))
+    devices.extend(list(Microcontroller.objects.filter(device_id="P-206")))
+    devices.extend(list(Microcontroller.objects.filter(device_id="FIT-401")))
+    devices.extend(list(Microcontroller.objects.filter(device_id="FIT-301")))
+    a = Alert(start_time=start_time, severity=severity, physical_file=physical_file)
+    a.save()
+    for d in devices:
+        a.microcontroller.add(d)
+    a.save()
+    print(devices)
     return HttpResponse("Called")

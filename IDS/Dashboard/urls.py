@@ -7,5 +7,6 @@ urlpatterns = [
     path('table/', views.table, name="table"),
 #    path('device/', views.device, name="device"),
     path('device/<int:id>/', views.device, name="device"),
-    path('autoAdd/', views.addPhysicalToDatabase, name="AutoAdd"),
+    path('alert/<int:id>', views.alert, name="alert"),
+    path('autoAdd/', views.addAlertToDatabase, name="AutoAdd"),
 ]

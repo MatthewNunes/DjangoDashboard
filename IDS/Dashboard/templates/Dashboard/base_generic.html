@@ -47,12 +47,22 @@
         </div>
         <div class='alerts-group'>
           <button class="accordion">Alerts</button>
-            <button class="secondary">High</button>
-              <button class="high tertiary">Test1</button>
-            <button class="secondary">Medium</button>
-              <button class="medium tertiary">Test2</button>
-            <button class="secondary">Low</button>
-              <button class="low tertiary">Test3</button>
+          <button class="secondary">Critical</button>
+          {% for alert in critical_alerts %}
+            <button class="critical tertiary">{{ alert.start_time }}</button>
+          {% endfor %}
+          <button class="secondary">High</button>
+          {% for alert in high_alerts %}
+            <button class="high tertiary">{{ alert.start_time }}</button>
+          {% endfor %}
+          <button class="secondary">Medium</button>
+          {% for alert in medium_alerts %}
+            <a href="{% url 'alert' alert.pk %}"><button class="medium tertiary">{{ alert.start_time }}</button></a>
+          {% endfor %}
+          <button class="secondary">Low</button>
+          {% for alert in low_alerts %}
+              <button class="low tertiary">{{ alert.start_time }}</button>
+          {% endfor %}
         </div>
         <button class="accordion">Vulnerabilities</button>
       </div>

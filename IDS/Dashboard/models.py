@@ -20,6 +20,13 @@ device_types = [
     ("PLC", "PLC"),
 ]
 
+severity_levels = [
+    ("Low", "Low"),
+    ("Medium", "Medium"),
+    ("High", "High"),
+    ("Critical", "Critical"),
+]
+
 # Create your models here.
 class Device(models.Model):
     ip_address = models.CharField(max_length=15)
@@ -39,5 +46,6 @@ class Microcontroller(models.Model):
 
 class Alert(models.Model):
     start_time = models.DateTimeField()
-    severity = models.CharField(max_length=15, blank=True)
+    severity = models.CharField(max_length=15, choices=severity_levels, blank=True)
+    physical_file = models.CharField(max_length=60, blank=True)
     microcontroller = models.ManyToManyField(Microcontroller)

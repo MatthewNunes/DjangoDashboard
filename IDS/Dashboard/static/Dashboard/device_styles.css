@@ -1,3 +1,7 @@
+body {
+  font-family: Helvetica, Arial;
+}
+
 .diagram rect {
   fill: none;
   stroke: black;

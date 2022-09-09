@@ -7,12 +7,40 @@
 
 {% block styles %}
   <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/main_styles.css' %}">
-  <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/main_grid.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/device_grid.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/alert_styles.css' %}" >
 {% endblock %}
 
 {% block main %}
+<div class="details">
+  <table class="styled-table">
+    <tr><th scope="row">Start Time</th><td>{{ alert_obj.start_time }}</td></tr>
+    <tr><th scope="row">Severity</th><td>{{ alert_obj.severity }}</td></tr>
+    <tr><th scope="row">Potential Output Loss (per day)</th><td>{{ output_loss }} gallons</td></tr>
+    <tr><th scope="row">Devices Involved</th><td>
+      {% for microcontroller in alert_obj.microcontroller.all %}
+        {{ microcontroller.device_id }} <br />
+      {% endfor %}</td></tr>
+  </table>
+
+
+</div>
+
+<div class="diagram"></div>
 {% endblock %}
 
 {% block scripts %}
-
+  <script type="text/javascript" src="{% static 'Dashboard/js/line_chart.js' %}"></script>
+  <script type="text/javascript">
+    var data = JSON.parse("{{alert_df|escapejs}}");
+    var devices_affected = JSON.parse("{{full_microcontroller_names|escapejs}}");
+    devices_affected.forEach((item, i) => {
+      devices_affected[i] = item.split("-").join("")
+    });
+    parseDatasetTime(data);
+    for (let i =0; i < devices_affected.length; i++){
+        drawBrushLineChart(data, devices_affected[i], devices_affected[i]);
+    }
+    
+  </script>
 {% endblock %}
