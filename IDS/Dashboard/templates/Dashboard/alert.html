@@ -16,6 +16,7 @@
   <table class="styled-table">
     <tr><th scope="row">Start Time</th><td>{{ alert_obj.start_time }}</td></tr>
     <tr><th scope="row">Severity</th><td>{{ alert_obj.severity }}</td></tr>
+    <tr><th scope="row">Confidence in prediction</th><td>{{ alert_obj.confidence }}%</td></tr>
     <tr><th scope="row">Potential Output Loss (per day)</th><td>{{ output_loss }} gallons</td></tr>
     <tr><th scope="row">Devices Involved</th><td>
       {% for microcontroller in alert_obj.microcontroller.all %}
@@ -26,7 +27,7 @@
 
 </div>
 
-<div class="diagram"></div>
+<div class="diagram" style="overflow:visible"></div>
 {% endblock %}
 
 {% block scripts %}
@@ -41,6 +42,6 @@
     for (let i =0; i < devices_affected.length; i++){
         drawBrushLineChart(data, devices_affected[i], devices_affected[i]);
     }
-    
+
   </script>
 {% endblock %}

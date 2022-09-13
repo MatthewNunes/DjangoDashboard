@@ -35,7 +35,9 @@ function drawBrushLineChart(data, var_to_display, id_val){
     .range([ 0, width ]);
   xAxis = svg.append("g")
     .attr("transform", `translate(0, ${height})`)
-    .call(d3.axisBottom(x));
+    .attr("class", "x-axis-"+id_val)
+    .call(d3.axisBottom(x)
+        .ticks(5));
 
   // Add Y axis
   const y = d3.scaleLinear()
@@ -86,21 +88,23 @@ function drawBrushLineChart(data, var_to_display, id_val){
 
   // A function that update the chart for given boundaries
   function updateChart(event,d) {
-
+    console.log(event);
+    console.log(d);
     // What are the selected boundaries?
     extent = event.selection
 
     // If no selection, back to initial coordinate. Otherwise, update X axis domain
     if(!extent){
       if (!idleTimeout) return idleTimeout = setTimeout(idled, 350); // This allows to wait a little bit
-      x.domain([ 4,8])
-    }else{
-      x.domain([ x.invert(extent[0]), x.invert(extent[1]) ])
-      line.select(".brush").call(brush.move, null) // This remove the grey brush area as soon as the selection has been done
-    }
+      x.domain([ 4,8]);
 
+    }else{
+      x.domain([ x.invert(extent[0]), x.invert(extent[1]) ]);
+      line.select(".brush").call(brush.move, null); // This remove the grey brush area as soon as the selection has been done
+    }
+    var newX = d3.select(".x-axis-"+id_val);
     // Update axis and line position
-    xAxis.transition().duration(1000).call(d3.axisBottom(x))
+    newX.transition().duration(1000).call(d3.axisBottom(x).ticks(5));
     line
         .select('.line')
         .transition()
@@ -108,13 +112,14 @@ function drawBrushLineChart(data, var_to_display, id_val){
         .attr("d", d3.line()
           .x(function(d) { return x(d.Timestamp) })
           .y(function(d) { return y(d[var_to_display]) })
-        )
+        );
   }
 
   // If user double click, reinitialize the chart
   svg.on("dblclick",function(){
-    x.domain(d3.extent(data, function(d) { return d.Timestamp; }))
-    xAxis.transition().call(d3.axisBottom(x))
+    x.domain(d3.extent(data, function(d) { return d.Timestamp; }));
+    var newX = d3.select(".x-axis-"+id_val);
+    newX.transition().call(d3.axisBottom(x).ticks(5))
     line
       .select('.line')
       .transition()

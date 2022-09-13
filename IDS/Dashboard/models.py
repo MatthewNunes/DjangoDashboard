@@ -48,4 +48,5 @@ class Alert(models.Model):
     start_time = models.DateTimeField()
     severity = models.CharField(max_length=15, choices=severity_levels, blank=True)
     physical_file = models.CharField(max_length=60, blank=True)
+    confidence = models.IntegerField(blank=True, default=0)
     microcontroller = models.ManyToManyField(Microcontroller)
