@@ -7,6 +7,7 @@
       <link rel="stylesheet" type="text/css" href="{% static 'Dashboard/main_grid.css' %}">
     {% endblock %}
     <link rel="icon" type="image/x-icon" href="{% static 'Dashboard/img/favicon_io/favicon.ico' %}">
+    <script src="https://kit.fontawesome.com/0ae5b26cff.js" crossorigin="anonymous"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script type="text/javascript">
       var time_list = JSON.parse("{{time_list|escapejs}}");
@@ -35,18 +36,19 @@
           <li><a href="#">Vulnerabilities</a></li>
         </ul> -->
         <div class="overview-group">
-          <button class="accordion">Overview</button>
-          <a href="/dashboard"><button class="secondary" style="border-bottom: 1px solid black">Network</button></a>
+
+          <button class="accordion"><i class="fa-solid fa-network-wired" style="padding-right:10px"></i>Overview</button>
+          <a href="/dashboard"><button class="secondary">Network</button></a>
           <a href="/dashboard/table"><button class="secondary">Table</button></a>
         </div>
         <div class="devices-group">
-          <button class="accordion">Devices</button>
+          <button class="accordion"><i class="fa-solid fa-microchip" style="padding-right:10px"></i>Devices</button>
           {% for src in source_model %}
             <a href="{% url 'device' src.id %}"><button class="secondary">{{ src.ip_address }}</button></a>
           {% endfor %}
         </div>
         <div class='alerts-group'>
-          <button class="accordion">Alerts</button>
+          <button class="accordion"><i class="fa-solid fa-bell" style="padding-right:10px;"></i>Alerts</button>
           <button class="secondary">Critical</button>
           {% for alert in critical_alerts %}
             <button class="critical tertiary">{{ alert.start_time }}</button>
@@ -64,7 +66,6 @@
               <button class="low tertiary">{{ alert.start_time }}</button>
           {% endfor %}
         </div>
-        <button class="accordion">Vulnerabilities</button>
       </div>
       <div class="banner">
         <form action="{{ request.path }}" method="GET">
@@ -105,7 +106,7 @@
 
         /* Toggle between hiding and showing the active panel */
         var panels = this.parentElement.getElementsByClassName(secondary_class);
-        console.log(this.getElementsByClassName(secondary_class));
+        //console.log(this.getElementsByClassName(secondary_class));
         // var panel = this.nextElementSibling;
         for (let j =0; j<panels.length; j++) {
           if (panels[j].style.display === "block") {
@@ -130,11 +131,11 @@
          acc[i].addEventListener("click", function() {
          /* Toggle between adding and removing the "active" class,
          to highlight the button that controls the panel */
-         this.classList.toggle("active");
+         this.classList.toggle("active-secondary");
 
          /* Toggle between hiding and showing the active panel */
          var panels = this.parentElement.getElementsByClassName(this.innerHTML + " " + secondary_class);
-         //console.log(this.getElementsByClassName(secondary_class));
+         console.log(this.getElementsByClassName(secondary_class));
          // var panel = this.nextElementSibling;
          for (let j =0; j<panels.length; j++) {
            if (panels[j].style.display === "block") {

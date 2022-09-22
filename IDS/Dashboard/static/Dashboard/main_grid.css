@@ -1,3 +1,8 @@
+body {
+  padding:0;
+  margin:0;
+}
+
 .grid_container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
@@ -7,8 +12,8 @@
 }
 
 .grid_container > div {
-  background-color: rgba(255, 255, 255, 0.8);
-  padding: 20px;
+  /* background-color: rgba(255, 255, 255, 0.8); */
+  padding: 0px;
 }
 
 .main_area {
@@ -19,7 +24,14 @@
   grid-area: nav;
   padding: 0;
   margin: 0;
+  height: 100vh;
+  position: fixed;
+  overflow: auto;
+  width: 150px;
+  text-decoration: none;
 }
+
+
 
 .banner {
   grid-area: ban;
