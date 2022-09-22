@@ -24,6 +24,14 @@
       {% endfor %}</td></tr>
   </table>
 
+  <table class="styled-table">
+    {% for microcontroller in alert_obj.microcontroller.all %}
+      <tr><th scope="row">{{ microcontroller.device_id }}</th><td>{{ microcontroller.description }}</td></tr>
+    {% endfor %}
+
+
+  </table>
+
 
 </div>
 
